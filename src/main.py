@@ -41,6 +41,10 @@ def run_experiment(seed, window_size, L_parameter):
 def main():
     if not os.path.exists(Config.DOCS_DIR):
         os.makedirs(Config.DOCS_DIR)
+    if not os.path.exists(Config.PLOTS_DIR):
+        os.makedirs(Config.PLOTS_DIR)
+    if not os.path.exists(Config.OUTPUTS_DIR):
+        os.makedirs(Config.OUTPUTS_DIR)
         
     print("Starting Experiments...")
     
@@ -55,10 +59,16 @@ def main():
         print(f"Seed {seed}: Training L=1...")
         mse_l1, model_l1 = run_experiment(seed, Config.CONTEXT_WINDOW, 1)
         results_L1.append(mse_l1)
+        if seed == 0:
+            torch.save(model_l1.state_dict(), Config.MODEL_L1_PATH)
+            print(f"Saved L=1 model to {Config.MODEL_L1_PATH}")
         
         print(f"Seed {seed}: Training L=100...")
-        mse_l100, _ = run_experiment(seed, Config.CONTEXT_WINDOW, 100)
+        mse_l100, model_l100 = run_experiment(seed, Config.CONTEXT_WINDOW, 100)
         results_L100.append(mse_l100)
+        if seed == 0:
+            torch.save(model_l100.state_dict(), Config.MODEL_L100_PATH)
+            print(f"Saved L=100 model to {Config.MODEL_L100_PATH}")
         
         # Save plots from the first seed's L=1 model
         if seed == 0:

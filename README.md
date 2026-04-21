@@ -62,6 +62,11 @@ Statistical aggregation over 3 seeds yields the following Mean Squared Error (MS
 | **L=100** (Stateful) | 0.556277 | 0.012773 |
 | **Window=10** | 0.603791 | 0.007804 |
 
+## Visual Results
+![Comparison Grid](docs/plots/comparison_grid_run1.png)
+
+The comparison figure demonstrates the distinct behavioral differences between the L=1 and L=100 BPTT variants. The L=1 model fails to track the temporal structure of the target frequencies, often diverging or exhibiting high-frequency noise in its predictions, which confirms that per-sample context reset inhibits the learning of long-term sinusoidal dependencies. Conversely, the L=100 model successfully reconstructs the shape of each target sinusoid, although it shows slight distortion at higher frequencies (5Hz and 7Hz). The top row illustrates the mixed signal, highlighting the complexity of the source separation task where the model must isolate a single component from a sum of multiple noisy oscillators.
+
 ### Window Size Ablation
 Comparing window sizes of 10 vs 100 samples shows the impact of temporal context on extraction accuracy.
 ![Window Size Ablation](docs/window_size_ablation.png)

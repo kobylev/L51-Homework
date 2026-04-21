@@ -1,4 +1,7 @@
 torch
 numpy
 matplotlib
+pandas
+streamlit
+pytest
 scipy

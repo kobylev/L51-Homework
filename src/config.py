@@ -28,3 +28,7 @@ class Config:
     
     # Paths
     DOCS_DIR = "docs"
+    PLOTS_DIR = "docs/plots"
+    OUTPUTS_DIR = "outputs"
+    MODEL_L1_PATH = "outputs/model_l1.pt"
+    MODEL_L100_PATH = "outputs/model_l100.pt"
