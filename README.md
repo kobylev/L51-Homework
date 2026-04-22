@@ -10,8 +10,8 @@ This project implements a **Conditional LSTM Bandpass Filter** using PyTorch. Th
 4. [Signal & Noise Model](#signal--noise-model)
 5. [Training Strategy](#training-strategy)
 6. [Experimental Setup](#experimental-setup)
-7. [Results — Run 1 (freq_noise=0.0)](#results--run-1-freq_noise00)
-8. [Results — Run 2 (freq_noise=0.3)](#results--run-2-freq_noise03)
+7. [Results — Run 1 (freq-noise=0.0)](#results--run-1-freq-noise00)
+8. [Results — Run 2 (freq-noise=0.3)](#results--run-2-freq-noise03)
 9. [Visual Results](#visual-results)
 10. [Ablation Study](#ablation-study)
 11. [Noise Independence Verification](#noise-independence-verification)
@@ -64,13 +64,13 @@ Input: [S(t), 0, 1, 0, 0] (Asking for 3Hz)
 ## Signal & Noise Model
 To ensure the network learns robust temporal filtering rather than simply memorizing the training data, we inject substantial noise into every signal component.
 
-*   **Amplitude Jitter:** $A_i(t) \sim \text{Uniform}(1 - \text{amp\_noise}, 1 + \text{amp\_noise})$. In our primary setup, amplitude varies between 0.8 and 1.2.
-*   **Phase Jitter:** $\phi_i(t) \sim \text{Uniform}(0, \text{phase\_noise\_max})$. Phase is randomized continuously between 0 and $2\pi$.
-*   **Frequency Jitter:** $\Delta f_i(t) \sim \text{Uniform}(-\text{freq\_noise}, +\text{freq\_noise})$. 
+*   **Amplitude Jitter:** $A_i(t) \sim \text{Uniform}(1 - \text{amp-noise}, 1 + \text{amp-noise})$. In our primary setup, amplitude varies between 0.8 and 1.2.
+*   **Phase Jitter:** $\phi_i(t) \sim \text{Uniform}(0, \text{phase-noise-max})$. Phase is randomized continuously between 0 and $2\pi$.
+*   **Frequency Jitter:** $\Delta f_i(t) \sim \text{Uniform}(-\text{freq-noise}, +\text{freq-noise})$. 
 
 **Two Experimental Runs:**
-1.  **Run 1 (freq_noise=0.0):** The frequencies are strictly 1Hz, 3Hz, 5Hz, and 7Hz. This represents a learnable, stationary signal where the LSTM can reliably lock onto the phase.
-2.  **Run 2 (freq_noise=0.3):** Substantial frequency jitter is introduced. The target signals become non-stationary, effectively destroying the strict periodicity. Under these conditions, the signal becomes theoretically unlearnable for a simple causal LSTM, demonstrating the fundamental limits of the architecture when faced with high non-stationarity.
+1.  **Run 1 (`freq_noise=0.0`):** The frequencies are strictly 1Hz, 3Hz, 5Hz, and 7Hz. This represents a learnable, stationary signal where the LSTM can reliably lock onto the phase.
+2.  **Run 2 (`freq_noise=0.3`):** Substantial frequency jitter is introduced. The target signals become non-stationary, effectively destroying the strict periodicity. Under these conditions, the signal becomes theoretically unlearnable for a simple causal LSTM, demonstrating the fundamental limits of the architecture when faced with high non-stationarity.
 
 ## Training Strategy
 A key axis of exploration is the temporal context provided to the LSTM, controlled by the sequence length parameter $L$.
@@ -89,7 +89,7 @@ The framework and hardware details are standardized to ensure reproducibility:
 | **Epochs** | 10 |
 | **Framework** | PyTorch 2.0+ |
 
-## Results — Run 1 (freq_noise=0.0)
+## Results — Run 1 (freq-noise=0.0)
 Statistical aggregation over 3 seeds yields the following Mean Squared Error (MSE) results on the test set:
 
 | Configuration | Mean MSE | Std Dev |
@@ -103,7 +103,7 @@ Statistical aggregation over 3 seeds yields the following Mean Squared Error (MS
 *   **5Hz & 7Hz:** The performance delta between L=1 and L=100 shrinks, though L=100 still maintains an edge. However, the L=1 model exhibits high-frequency noise and divergence, showing its inability to track stable periodic structures without state carry-over.
 *   **Overall:** The high MSE observed across the board suggests that while the LSTM learns the frequency phase, the amplitude reconstruction is significantly dampened by the noise normalization. The model tends to underfit the clean signal's peak amplitude, likely due to the uniform noise distribution which shifts the mean of the mixed signal.
 
-## Results — Run 2 (freq_noise=0.3)
+## Results — Run 2 (freq-noise=0.3)
 When introducing severe frequency jitter (`freq_noise=0.3`), the signal loses its strict periodicity.
 In this regime, both L=1 and L=100 models collapse to an $\text{MSE} \approx 0.5$. This value is highly significant—it equals the trivial variance baseline of the signal itself. When the signal is non-stationary, the causal LSTM cannot predict the future phase, so it defaults to predicting the mean (zero), resulting in an error equal to the signal's variance. This empirically proves the limitation of standard LSTMs on highly non-stationary data without explicit frequency-domain transformations.
 
