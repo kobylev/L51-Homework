@@ -64,9 +64,9 @@ Input: [S(t), 0, 1, 0, 0] (Asking for 3Hz)
 ## Signal & Noise Model
 To ensure the network learns robust temporal filtering rather than simply memorizing the training data, we inject substantial noise into every signal component.
 
-*   **Amplitude Jitter:** $A_i(t) \sim \text{Uniform}(1 - \text{amp-noise}, 1 + \text{amp-noise})$. In our primary setup, amplitude varies between 0.8 and 1.2.
-*   **Phase Jitter:** $\phi_i(t) \sim \text{Uniform}(0, \text{phase-noise-max})$. Phase is randomized continuously between 0 and $2\pi$.
-*   **Frequency Jitter:** $\Delta f_i(t) \sim \text{Uniform}(-\text{freq-noise}, +\text{freq-noise})$. 
+*   **Amplitude Jitter:** $A_i(t) \sim \text{Uniform}(1 - \text{amp\_noise}, 1 + \text{amp\_noise})$. In our primary setup, amplitude varies between 0.8 and 1.2.
+*   **Phase Jitter:** $\phi_i(t) \sim \text{Uniform}(0, \text{phase\_noise\_max})$. Phase is randomized continuously between 0 and 2π.
+*   **Frequency Jitter:** $\Delta f_i(t) \sim \text{Uniform}(-\text{freq\_noise}, +\text{freq\_noise})$. 
 
 **Two Experimental Runs:**
 1.  **Run 1 (`freq_noise=0.0`):** The frequencies are strictly 1Hz, 3Hz, 5Hz, and 7Hz. This represents a learnable, stationary signal where the LSTM can reliably lock onto the phase.
